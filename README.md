@@ -1,1 +1,1 @@
-# StrideSync-Project
+ This is a fitness-focused AI project that helps users track their workouts in real time and ensure proper form using computer vision and machine learning. It combines pose detection, repetition counting, and form validation to offer users intelligent feedback, aiming to reduce injury risk and improve workout effectiveness.
