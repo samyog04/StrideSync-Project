@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>StrideSync Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 30px;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: center;
+            border: 1px solid #ccc;
+        }
+
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        canvas {
+            display: block;
+            margin: 30px auto;
+            max-width: 800px;
+        }
+    </style>
+</head>
+<body>
+    <h1>StrideSync Workout Dashboard</h1>
+
+    <canvas id="repsChart"></canvas>
+
+    <table>
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Exercise</th>
+                <th>Reps</th>
+                <th>Good Posture</th>
+                <th>Timestamp</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for log in logs %}
+            <tr>
+                <td>{{ log.username }}</td>
+                <td>{{ log.exercise }}</td>
+                <td>{{ log.reps }}</td>
+                <td>{{ 'Yes' if log.good_posture else 'No' }}</td>
+                <td>{{ log.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <script>
+        const chartCtx = document.getElementById('repsChart').getContext('2d');
+
+        const chartData = {
+            labels: [{% for log in logs %}"{{ log.timestamp.strftime('%H:%M:%S') }}",{% endfor %}],
+            datasets: [{
+                label: 'Reps Over Time',
+                data: [{% for log in logs %}{{ log.reps }},{% endfor %}],
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 2,
+                fill: true,
+                tension: 0.3
+            }]
+        };
+
+        const repsChart = new Chart(chartCtx, {
+            type: 'line',
+            data: chartData,
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        stepSize: 1
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
